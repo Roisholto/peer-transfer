@@ -5,14 +5,20 @@ use Roi\PeerTransfer\Account ;
 
 final class AccountTest extends TestCase {
 
-  function testAdd() : void{
+  function testAdd() {
     $Account = Account::getInstance() ;
     $this->assertTrue($Account->add('victor')) ;
     $this->assertTrue($Account->add('darius')) ;
-    // $this->expectException(\Exception::class);
-    // $Account->add('victor') ;
-  }
 
+    return $Account ;
+  }
+  /**
+  * @depends testAdd
+  */
+  function testAddDuplicateUserException($Account){
+    $this->expectException(\Exception::class);
+    $Account->add('victor') ;
+  }
   /**
   * @depends testAdd
   */
@@ -57,13 +63,11 @@ final class AccountTest extends TestCase {
   * @depends testSendMoneyToPeer
   */
   function testTransferOutOfApp(){
-    echo 'transferOutOfApp' ;
     $Account = Account::getInstance() ;
     // succesfully transfer ;
     $this->assertTrue($Account->transferOutOfApp('victor', 25)) ;
     // confirm that the amount was deducted after transferred
     $this->assertEquals($Account->get('victor')['amount'], 0) ;
-    print_r($Account->get('victor')['amount']) ;
     return $Account ;
   }
 
