@@ -40,7 +40,8 @@ class Account {
 
       $this->users[$uid] = [
         'name'=>$uid,
-        'amount'=>0
+        'amount'=>0,
+        'currency'=>'USD'
       ] ;
 
       return true ;
