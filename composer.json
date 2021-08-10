@@ -2,7 +2,7 @@
     "name": "roisholto/peer-transfer",
     "description": "An in memory peer to peer money transfer backend in php",
     "type": "project",
-    "require": {
+    "require-dev": {
         "phpunit/phpunit": "9.5.x-dev"
     },
     "authors": [
