@@ -114,7 +114,7 @@ final class AccountTest extends TestCase {
     $Account->sendMoneyToPeer('victor', 'darius', $yen_to_ngn, 'NGN') ;
     //
     $this->assertEquals($Account->get('darius')['balance']['USD'], 5.06) ;
-    // be sure that the we have 2000 yen left in victors account ;
+    // be sure that the we have 3500 yen left in victors account ;
     $this->assertEquals($Account->get('victor')['balance']['YEN'], 3500, '', 0) ;
     // now ensure we have the naira equivalent of 3000 yen in darius account ;
     $this->assertEquals(
