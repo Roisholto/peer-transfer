@@ -1,6 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-
 use Roi\PeerTransfer\Account ;
 
 final class AccountTest extends TestCase {
@@ -82,7 +81,7 @@ final class AccountTest extends TestCase {
   function testTransferMoneyToPeerNGNToUSD($Account){
     // get darius
     $darius_NGN = $Account->get('darius')['balance']['NGN'] ;
-    $deducted_from_darius_NGN = Account::moneyFormat(Account::convertCurrency(2, 'USD', 'NGN')) ;
+    $deducted_from_darius_NGN = Account::convertCurrency(2, 'USD', 'NGN') ;
     $this->assertTrue($Account->sendMoneyToPeer('darius', 'victor', 7, 'USD')) ;
     // though darius right now has just 5 dollar in his account
     // he is able to send 7 dollars because he has funds in his NGN account
@@ -107,8 +106,7 @@ final class AccountTest extends TestCase {
   * @depends testDeposit
   */
   function testTransferMoneyFromYENToNGN($Account){
-    $yen_to_ngn = Account::moneyFormat(Account::convertCurrency(1500.00, 'YEN', 'NGN') ) ;
-    echo 'yy ', $yen_to_ngn, "\r\n";
+    $yen_to_ngn = Account::convertCurrency(1500.00, 'YEN', 'NGN') ;
     $Account->deposit('victor', 5000, 'YEN') ;
     // Ensure that victor has nothing left in his dollar account just to make the
     // the values more obvious.
@@ -117,10 +115,7 @@ final class AccountTest extends TestCase {
     //
     $this->assertEquals($Account->get('darius')['balance']['USD'], 5.06) ;
     // be sure that the we have 2000 yen left in victors account ;
-    $this->assertEquals($Account->get('victor')['balance']['YEN'], 3500.00) ;
-
-    print_r($Account->get('darius')['balance']) ;
-
+    $this->assertEquals($Account->get('victor')['balance']['YEN'], 3500, '', 0) ;
     // now ensure we have the naira equivalent of 3000 yen in darius account ;
     $this->assertEquals(
       $Account->get('darius')['balance']['NGN'],
@@ -147,13 +142,15 @@ final class AccountTest extends TestCase {
 
 
   function testConvertNGNToUSD(){
-    $this->assertEquals(Account::moneyFormat(Account::convertCurrency(1000, 'NGN', 'USD')), 2.43) ;
+    $a = Account::convertCurrency(1000, 'NGN', 'USD') ;
+    $b = Account::convertCurrency($a, 'USD', 'NGN') ;
+    $this->assertEquals(1000, $b) ;
   }
 
   function testConvertNGNToYUAN(){
-    $this->assertEquals(
-      Account::moneyFormat(Account::convertCurrency(3000, 'NGN', 'YUAN')),
-      797.94) ;
+    $a = Account::convertCurrency(3000, 'NGN', 'YUAN') ;
+    $b = Account::convertCurrency($a, 'YUAN', 'NGN') ;
+    $this->assertEquals(3000, $b) ;
   }
 
 }
