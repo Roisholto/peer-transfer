@@ -19,6 +19,20 @@ class Account {
     'YEN'=>6.46
     ] ;
 
+  private const CURRENCY_PAIRS = [
+    'USD/NGN'=>411.57,
+    'NGN/USD'=>0.00242972033918895935077872536871,
+    'USD/YUAN'=>109.47,
+    'YUAN/USD'=>0.00913492280990225632593404585731,
+    'USD/YEN'=>6.46,
+    'YEN/USD'=>0.15479876160990712074303405572755,
+    'YUAN/NGN'=>63.32,
+    'NGN/YUAN'=>0.01579279848389134554643082754264,
+    'YUAN/YEN'=>16.89,
+    'YEN/YUAN'=>0.05920663114268798105387803433985,
+    'YEN/NGN'=>3.75,
+    'NGN/YEN'=>0.26666666666666666666666666666667
+  ] ;
 
   private static $instance = null;
 
@@ -126,12 +140,10 @@ class Account {
             $new_senders_balance[$key] = 0 ;
             }
           else{
-            $new_senders_balance[$key] = static::MoneyFormat(
-              static::convertCurrency(
+            $new_senders_balance[$key] = static::convertCurrency(
                 abs($amount_left_to_makeup_payees_balance),
                 $payee_currency,
                 $key
-                )
               ) ;
             break ;
           }
@@ -150,18 +162,9 @@ class Account {
   }
 
   static function convertCurrency(float $amount, string $from, string $to) : float {
-    $rate_from = static::SUPPORTED_CURRENCIES[$from] ;
-    $rate_to = static::SUPPORTED_CURRENCIES[$to] ;
     $amount = abs($amount) ;
-    if($to != 'USD' and $from !='USD'){
-      // first get the rate in usd
-      // then convert to the $to currency;
-      $rate_in_dollar = static::convertCurrency($amount, $from, 'USD');
-      return static::convertCurrency($rate_in_dollar, 'USD', $to) ;
-    }
-
-    $rate = ($amount*$rate_to)/$rate_from ;
-    return $rate ;
+    $rate = static::CURRENCY_PAIRS[$from.'/'.$to] ;
+    return  $amount*$rate ;
   }
 
   static function moneyFormat($n){
